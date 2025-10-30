@@ -7,6 +7,8 @@ import ResumeUploadPage from "./pages/ResumeUploadPage";
 import ChooseModePage from "./pages/ChooseModePage";
 import JobMatchingPage from "./pages/JobMatchingPage";
 import { useAuth } from "./context/AuthContext";
+import ResumeAnalysisResultPage from "./pages/ResumeAnalysisResultPage";
+import  JobMatchResultPage  from "./pages/JobMatchResultPage";
 
 function App() {
   const { user, loading } = useAuth();
@@ -56,6 +58,16 @@ function App() {
           element={
             user ? <JobMatchingPage /> : <Navigate to="/login" replace />
           }
+        />
+
+        <Route
+          path="/resume/analysis/result"
+          element={<ResumeAnalysisResultPage />}
+        />
+
+        <Route
+          path="/resume/job-match/result"
+          element={<JobMatchResultPage/>}
         />
 
         {/* ✅ Catch-all Route */}

@@ -1,8 +1,10 @@
 import fs from "fs";
-import pdf from "pdf-extraction"; // ✅ use pdf-extraction instead of pdf-parse
+import pdf from "pdf-extraction";
 import mammoth from "mammoth";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
+import RESUME_ANALYSIS_PROMPT from "../resumeAnalysisPrompt.js";
+import RESUME_JOB_MATCH_PROMPT from "../resumeJobMatchingPrompt.js";
 
 dotenv.config();
 
@@ -32,26 +34,25 @@ export const analyzeResume = async (req, res) => {
 
     const resumeText = await extractTextFromFile(req.file.path);
 
-    const prompt = `
-      You are a professional career coach.
-      Analyze the following resume and provide structured feedback in JSON format:
-      {
-        "summary": "Short summary of the candidate",
-        "strengths": ["list of strengths"],
-        "weaknesses": ["list of weaknesses"],
-        "improvement_suggestions": ["actionable tips to improve resume"]
-      }
-
-      Resume:
-      ${resumeText}
-    `;
-
+    const prompt = RESUME_ANALYSIS_PROMPT.replace(
+      "{{RESUME_TEXT}}",
+      resumeText
+    );
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     const result = await model.generateContent(prompt);
-    const suggestions = result.response.text();
+    const responseText = result.response.text().trim();
 
-    // cleanup temp uploaded file
-    fs.unlinkSync(req.file.path);
+    let suggestions;
+    try {
+      suggestions = JSON.parse(responseText);
+    } catch {
+      const match = responseText.match(/\{[\s\S]*\}/);
+      suggestions = match ? JSON.parse(match[0]) : { raw: responseText };
+    }
+
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.warn("⚠️ File cleanup failed:", err.message);
+    });
 
     res.status(200).json({ suggestions });
   } catch (error) {
@@ -63,7 +64,11 @@ export const analyzeResume = async (req, res) => {
   }
 };
 
-// ✅ Job Matching Controller (only job text now)
+
+
+
+
+// ✅ Job Matching Controller
 export const matchJob = async (req, res) => {
   try {
     if (!req.file) {
@@ -71,39 +76,33 @@ export const matchJob = async (req, res) => {
     }
 
     const { jobDescriptionText } = req.body;
-
-    if (!jobDescriptionText || !jobDescriptionText.trim()) {
+    if (!jobDescriptionText?.trim()) {
       return res
         .status(400)
         .json({ message: "Please provide a job description text" });
     }
 
     const resumeText = await extractTextFromFile(req.file.path);
-
-    const prompt = `
-      You are a professional HR analyst.
-      Compare the following candidate resume with the given job description.
-      Return a structured JSON response like:
-      {
-        "match_score": "percentage match between 0-100",
-        "key_strengths": ["skills that match"],
-        "gaps": ["skills missing or weak"],
-        "suggestions": ["advice to better align resume with job"]
-      }
-
-      Resume:
-      ${resumeText}
-
-      Job Description:
-      ${jobDescriptionText}
-    `;
+    const prompt = RESUME_JOB_MATCH_PROMPT.replace(
+      "{{RESUME_TEXT}}",
+      resumeText
+    ).replace("{{JOB_DESCRIPTION}}", jobDescriptionText);
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     const result = await model.generateContent(prompt);
-    const analysis = result.response.text();
+    const responseText = result.response.text().trim();
 
-    // cleanup temp uploaded file
-    fs.unlinkSync(req.file.path);
+    let analysis;
+    try {
+      analysis = JSON.parse(responseText);
+    } catch {
+      const match = responseText.match(/\{[\s\S]*\}/);
+      analysis = match ? JSON.parse(match[0]) : { raw: responseText };
+    }
+
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.warn("⚠️ File cleanup failed:", err.message);
+    });
 
     res.status(200).json({ analysis });
   } catch (error) {

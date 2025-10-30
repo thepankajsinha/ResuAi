@@ -1,4 +1,6 @@
+// src/context/ResumeContext.jsx
 import React, { createContext, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { toast } from "react-toastify";
 
@@ -8,13 +10,11 @@ export const ResumeProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [jobMatchResult, setJobMatchResult] = useState(null);
+  const navigate = useNavigate();
 
-  // ✅ Analyze Resume (upload single resume file)
+  // ✅ Resume Analysis
   const analyzeResume = async (file) => {
-    if (!file) {
-      toast.error("Please upload a resume file!");
-      return;
-    }
+    if (!file) return toast.error("Please upload a resume file!");
 
     setLoading(true);
     const formData = new FormData();
@@ -24,29 +24,29 @@ export const ResumeProvider = ({ children }) => {
       const { data } = await api.post("/resume/analyze", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      if (!data?.suggestions)
+        return toast.error("Unexpected response from server");
+
       setAnalysisResult(data.suggestions);
       toast.success("Resume analyzed successfully!");
-      return data.suggestions;
+
+      navigate("/resume/analysis/result", {
+        state: { analysis: data.suggestions },
+      });
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error analyzing resume");
       console.error("❌ analyzeResume Error:", error);
-      return null;
+      toast.error(error.response?.data?.message || "Error analyzing resume");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Match Job (upload resume + job description text only)
+  // ✅ Job Match
   const matchJob = async (resumeFile, jobDescriptionText = "") => {
-    if (!resumeFile) {
-      toast.error("Please upload a resume file!");
-      return;
-    }
-
-    if (!jobDescriptionText.trim()) {
-      toast.error("Please provide a job description!");
-      return;
-    }
+    if (!resumeFile) return toast.error("Please upload a resume file!");
+    if (!jobDescriptionText.trim())
+      return toast.error("Please provide a job description!");
 
     setLoading(true);
     const formData = new FormData();
@@ -54,17 +54,23 @@ export const ResumeProvider = ({ children }) => {
     formData.append("jobDescriptionText", jobDescriptionText);
 
     try {
-      const { data } = await api.post("/resume/job-match", formData, {
+      const { data } = await api.post("/resume/match-job", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
+      if (!data?.analysis)
+        return toast.error("Unexpected response from server");
+
       setJobMatchResult(data.analysis);
       toast.success("Job match analysis completed!");
-      return data.analysis;
+
+      // ✅ Navigate to Job Match Result Page
+      navigate("/resume/job-matching/result", {
+        state: { matchData: data.analysis },
+      });
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error matching job");
       console.error("❌ matchJob Error:", error);
-      return null;
+      toast.error(error.response?.data?.message || "Error matching job");
     } finally {
       setLoading(false);
     }
@@ -85,5 +91,4 @@ export const ResumeProvider = ({ children }) => {
   );
 };
 
-// ✅ Custom hook for easy use
 export const useResume = () => useContext(ResumeContext);

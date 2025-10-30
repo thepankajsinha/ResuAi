@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { UploadCloud, FileText, Loader2 } from "lucide-react";
 import { useResume } from "../context/ResumeContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 const ResumeUploadPage = () => {
   const [file, setFile] = useState(null);
-  const { analyzeResume, analysisResult, loading } = useResume();
+  const { analyzeResume, loading } = useResume();
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
@@ -21,13 +23,17 @@ const ResumeUploadPage = () => {
       alert("Please select a PDF file first!");
       return;
     }
-    await analyzeResume(file); // ✅ calls backend through context
+
+    const result = await analyzeResume(file); // analyze via context
+    if (result) {
+      // ✅ Navigate to result page and pass data
+      navigate("/resume/analysis/result", { state: { analysis: result } });
+    }
   };
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-50 to-white py-12 px-6">
       <div className="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8 text-center">
-        {/* Header */}
         <h2 className="text-3xl font-extrabold text-gray-800 mb-2">
           Upload Your <span className="text-blue-600">Resume</span>
         </h2>
@@ -36,7 +42,6 @@ const ResumeUploadPage = () => {
           feedback.
         </p>
 
-        {/* Upload Box */}
         <div className="border-2 border-dashed border-blue-400 rounded-xl p-10 bg-blue-50 hover:bg-blue-100 transition">
           <label className="cursor-pointer flex flex-col items-center space-y-3">
             <UploadCloud className="text-blue-500" size={48} />
@@ -55,7 +60,6 @@ const ResumeUploadPage = () => {
           </label>
         </div>
 
-        {/* File Preview */}
         {file && (
           <div className="mt-6 flex items-center justify-center space-x-2 text-gray-700">
             <FileText size={20} className="text-blue-600" />
@@ -63,7 +67,6 @@ const ResumeUploadPage = () => {
           </div>
         )}
 
-        {/* Upload Button */}
         <button
           onClick={handleUpload}
           disabled={loading}
@@ -80,23 +83,10 @@ const ResumeUploadPage = () => {
             </>
           ) : (
             <>
-              <UploadCloud size={20} />
               Upload & Analyze
             </>
           )}
         </button>
-
-        {/* Result Display */}
-        {analysisResult && (
-          <div className="mt-8 bg-gray-50 border rounded-xl p-4 text-left">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              Analysis Result:
-            </h3>
-            <pre className="text-sm text-gray-700 whitespace-pre-wrap overflow-x-auto">
-              {analysisResult}
-            </pre>
-          </div>
-        )}
       </div>
     </section>
   );

@@ -1,4 +1,3 @@
-// src/pages/JobMatchingPage.jsx
 import React, { useState } from "react";
 import { UploadCloud, FileText, Target } from "lucide-react";
 import { useResume } from "../context/ResumeContext";

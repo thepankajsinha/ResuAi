@@ -1,4 +1,3 @@
-// src/context/ResumeContext.jsx
 import React, { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
@@ -12,7 +11,6 @@ export const ResumeProvider = ({ children }) => {
   const [jobMatchResult, setJobMatchResult] = useState(null);
   const navigate = useNavigate();
 
-  // ✅ Resume Analysis
   const analyzeResume = async (file) => {
     if (!file) return toast.error("Please upload a resume file!");
 
@@ -35,14 +33,13 @@ export const ResumeProvider = ({ children }) => {
         state: { analysis: data.suggestions },
       });
     } catch (error) {
-      console.error("❌ analyzeResume Error:", error);
       toast.error(error.response?.data?.message || "Error analyzing resume");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Job Match
+
   const matchJob = async (resumeFile, jobDescriptionText = "") => {
     if (!resumeFile) return toast.error("Please upload a resume file!");
     if (!jobDescriptionText.trim())
@@ -64,12 +61,10 @@ export const ResumeProvider = ({ children }) => {
       setJobMatchResult(data.analysis);
       toast.success("Job match analysis completed!");
 
-      // ✅ Navigate to Job Match Result Page
-      navigate("/resume/job-matching/result", {
+      navigate("/resume/job-match/result", {
         state: { matchData: data.analysis },
       });
     } catch (error) {
-      console.error("❌ matchJob Error:", error);
       toast.error(error.response?.data?.message || "Error matching job");
     } finally {
       setLoading(false);

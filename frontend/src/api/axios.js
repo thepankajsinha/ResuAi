@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://resuai-ylvj.onrender.com/",
   withCredentials: true, // Set to true if using cookies
 });
 
 export default api;
+

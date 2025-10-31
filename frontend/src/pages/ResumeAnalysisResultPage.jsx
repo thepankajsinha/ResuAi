@@ -14,42 +14,7 @@ const ResumeAnalysisResultPage = () => {
   const location = useLocation();
   const analysis = location.state?.analysis;
 
-  // Mock fallback (if no data passed)
-  const mockAnalysis = {
-    summary:
-      "A highly motivated software engineer with experience in full-stack development, known for building scalable and efficient applications with strong analytical and problem-solving skills.",
-    ats_score: 8.5,
-    ats_reasons: [
-      "Good keyword usage for technical roles",
-      "Well-structured sections",
-      "Lacks quantifiable achievements",
-    ],
-    strengths: [
-      "Strong technical foundation",
-      "Relevant project experience",
-      "Clear career progression",
-    ],
-    weaknesses: [
-      "Limited mention of teamwork and leadership",
-      "No quantifiable results or metrics",
-    ],
-    suggestions: {
-      high: [
-        "Add measurable achievements to highlight impact",
-        "Include more keywords from your target job description",
-      ],
-      medium: [
-        "Add a short professional headline under your name",
-        "Include links to GitHub or portfolio projects",
-      ],
-      optional: [
-        "Improve section spacing for readability",
-        "Add a color accent for section headers",
-      ],
-    },
-  };
-
-  const data = analysis || mockAnalysis;
+  const data = analysis;
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-6">

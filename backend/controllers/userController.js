@@ -8,16 +8,17 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // 1️⃣ Check if user exists
+    if(!name || !email || !password) {
+      return res.status(400).json({ message: "Please provide name, email and password" });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // 2️⃣ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 3️⃣ Create user
     const user = await User.create({
       name,
       email,
@@ -39,18 +40,19 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // 1️⃣ Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
-
-    // 2️⃣ Compare passwords
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+    
+    if(!email || !password) {
+      return res.status(400).json({ message: "Please provide email and password" });
     }
 
-    // 3️⃣ Generate JWT
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid Email or Password" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid Email or Password" });
+    }
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });

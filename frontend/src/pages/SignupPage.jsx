@@ -20,7 +20,6 @@ const SignupPage = () => {
       return;
     }
 
-    // 🚀 Call registerUser from context
     await registerUser(name, email, password);
   };
 

@@ -15,41 +15,30 @@ const LoginPage = () => {
   // ✅ Load saved email on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
+    const savedPassword = localStorage.getItem("rememberedPassword");
     if (savedEmail) {
       setEmail(savedEmail);
+      setPassword(savedPassword);
       setRememberMe(true);
     }
   }, []);
 
-  // ✅ Redirect if already logged in
   useEffect(() => {
-    if (user) navigate("/dashboard"); // adjust route as needed
+    if (user) navigate("/resume/mode"); 
   }, [user, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      toast.error("Please fill in both fields!");
-      return;
-    }
-
-    // Save or clear remembered email
     if (rememberMe) {
       localStorage.setItem("rememberedEmail", email);
+      localStorage.setItem("rememberedPassword", password);
     } else {
       localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberedPassword");
     }
 
-    // 🚀 Call context function
-    const res = await loginUser(email, password);
-
-    if (res?.success === false) {
-      toast.error(res.message);
-    } else {
-      toast.success("Login successful!");
-      navigate("/dashboard");
-    }
+    await loginUser(email, password);
   };
 
   return (

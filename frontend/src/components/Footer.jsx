@@ -13,14 +13,14 @@ const Footer = () => {
         {/* Social Links */}
         <div className="flex justify-center space-x-6 mb-6">
           <a
-            href="#"
+            href="https://www.linkedin.com/in/thepankajsinha/"
             className="hover:text-blue-600 transition"
             aria-label="LinkedIn"
           >
             <Linkedin size={22} />
           </a>
           <a
-            href="#"
+            href="https://github.com/thepankajsinha/ResuAi"
             className="hover:text-blue-600 transition"
             aria-label="GitHub"
           >
@@ -32,22 +32,6 @@ const Footer = () => {
             aria-label="Email"
           >
             <Mail size={22} />
-          </a>
-        </div>
-
-        {/* Links */}
-        <div className="flex justify-center flex-wrap gap-6 text-sm mb-6">
-          <a href="#" className="hover:text-blue-600 transition">
-            Home
-          </a>
-          <a href="#" className="hover:text-blue-600 transition">
-            Features
-          </a>
-          <a href="#" className="hover:text-blue-600 transition">
-            About
-          </a>
-          <a href="#" className="hover:text-blue-600 transition">
-            Contact
           </a>
         </div>
 

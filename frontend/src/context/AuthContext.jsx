@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
 
-  // ✅ Fetch current user (runs once on refresh)
   const fetchCurrentUser = async () => {
     try {
       const { data } = await api.get("/user/me");
@@ -28,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     fetchCurrentUser(); // ✅ ensures user persists after refresh
   }, []);
 
-  // ✅ Register
+
   const registerUser = async (name, email, password) => {
     setActionLoading(true);
     try {
@@ -42,13 +41,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Login
+  
   const loginUser = async (email, password) => {
     setActionLoading(true);
     try {
       const res = await api.post("/user/login", { email, password });
       setUser(res.data.user);
-      toast.success(res.data.message || "Login successful");
+      toast.success(res.data.message);
       navigate("/resume/mode");
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
@@ -57,7 +56,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Logout
+  
   const logoutUser = async () => {
     setActionLoading(true);
     try {

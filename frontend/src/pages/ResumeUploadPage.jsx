@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { UploadCloud, FileText, Loader2 } from "lucide-react";
 import { useResume } from "../context/ResumeContext.jsx";
-import { useNavigate } from "react-router-dom";
 
 const ResumeUploadPage = () => {
   const [file, setFile] = useState(null);
   const { analyzeResume, loading } = useResume();
-  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
@@ -24,11 +22,7 @@ const ResumeUploadPage = () => {
       return;
     }
 
-    const result = await analyzeResume(file); // analyze via context
-    if (result) {
-      // ✅ Navigate to result page and pass data
-      navigate("/resume/analysis/result", { state: { analysis: result } });
-    }
+    await analyzeResume(file); 
   };
 
   return (
@@ -49,7 +43,7 @@ const ResumeUploadPage = () => {
               Click to upload or drag and drop
             </span>
             <span className="text-sm text-gray-500">
-              Only PDF files supported
+              (Make sure file name ends with .pdf)
             </span>
             <input
               type="file"

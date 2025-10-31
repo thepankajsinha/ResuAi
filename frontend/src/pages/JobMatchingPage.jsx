@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UploadCloud, FileText, Target } from "lucide-react";
+import { UploadCloud, FileText, Target, Loader2 } from "lucide-react";
 import { useResume } from "../context/ResumeContext";
 
 const JobMatchingPage = () => {
@@ -22,7 +22,7 @@ const JobMatchingPage = () => {
       alert("Please upload your resume and paste a job description.");
       return;
     }
-    await matchJob(resumeFile, jobText); // ✅ Navigate automatically
+    await matchJob(resumeFile, jobText);
   };
 
   return (
@@ -48,6 +48,9 @@ const JobMatchingPage = () => {
               <UploadCloud className="text-blue-500" size={40} />
               <span className="text-blue-700 font-semibold">
                 Click to upload or drag and drop
+              </span>
+              <span className="text-sm text-gray-500">
+                (Make sure file name ends with .pdf)
               </span>
               <input
                 type="file"
@@ -82,10 +85,20 @@ const JobMatchingPage = () => {
         <button
           onClick={handleAnalyze}
           disabled={loading}
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"
+          className={`mt-8 w-full py-3 font-semibold rounded-lg flex items-center justify-center gap-2 transition ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
         >
-          <Target size={20} />
-          {loading ? "Analyzing..." : "Analyze Match"}
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin" size={20} />
+              Analyzing...
+            </>
+          ) : (
+            <>Analyse Match</>
+          )}
         </button>
       </div>
     </section>

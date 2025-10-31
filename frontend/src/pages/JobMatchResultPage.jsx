@@ -17,48 +17,7 @@ export const JobMatchResultPage = () => {
   const location = useLocation();
   const matchData = location.state?.matchData;
 
-  // Mock fallback for testing
-  const mockMatchData = {
-    summary:
-      "The candidate shows a strong alignment with the frontend developer role, demonstrating proficiency in React, JavaScript, and responsive design. Minor improvements can further strengthen the match.",
-    match_score: 82,
-    key_alignments: [
-      "Proficiency in React.js and modern frontend frameworks",
-      "Strong understanding of responsive and accessible UI design",
-      "Experience with RESTful APIs and version control tools",
-    ],
-    missing_keywords: [
-      "TypeScript",
-      "Unit testing frameworks (Jest, Mocha)",
-      "Continuous integration tools",
-    ],
-    improvement_suggestions: {
-      high: [
-        "Add TypeScript experience to highlight technical adaptability",
-        "Include measurable project outcomes (e.g., improved load time by X%)",
-      ],
-      medium: [
-        "Mention experience with CI/CD pipelines",
-        "Add testing tools to strengthen technical depth",
-      ],
-      optional: [
-        "Highlight teamwork and collaboration examples",
-        "Include a short professional summary headline",
-      ],
-    },
-    recommendations: {
-      summary_additions: [
-        "Frontend Developer skilled in modern JavaScript frameworks and performance optimization.",
-      ],
-      skills_to_add: ["TypeScript", "Automated testing", "Agile methodologies"],
-      project_ideas: [
-        "Develop a portfolio project integrating React + TypeScript",
-        "Implement automated unit testing for an existing project",
-      ],
-    },
-  };
-
-  const data = matchData || mockMatchData;
+  const data = matchData;
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-6">

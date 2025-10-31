@@ -18,10 +18,6 @@ const JobMatchingPage = () => {
   };
 
   const handleAnalyze = async () => {
-    if (!resumeFile || !jobText.trim()) {
-      alert("Please upload your resume and paste a job description.");
-      return;
-    }
     await matchJob(resumeFile, jobText);
   };
 

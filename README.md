@@ -1,3 +1,64 @@
+# 📄 ResuAI – AI-Powered Resume Analysis Platform
+
+ResuAI is a full-stack web application that helps users enhance their resumes using AI-driven insights.  
+Users can upload resumes and optionally compare them against job descriptions to receive compatibility analysis, keyword suggestions, and an overall match score — all powered by Google Gemini API.
+
+---
+
+## 🚀 Features
+
+- 🔍 **Resume Analysis**  
+  Upload your resume and receive AI-generated feedback for improvement.
+  
+- 🆚 **Resume vs Job Description Comparison**  
+  Get a detailed match score and keyword gap detection to optimize your resume for a target job.
+
+- 🤖 **Google Gemini API Integration**  
+  Provides smart and accurate suggestions leveraging cutting-edge AI models.
+
+- 🔐 **Secure Authentication**  
+  JWT + bcrypt ensure strong user security and data privacy.
+
+- 🌐 **RESTful API Backend**  
+  Express.js backend handles authentication, uploads, and AI requests.
+
+- 💾 **MongoDB Storage**  
+  Efficient user management and secure data storage.
+
+- 🎨 **Modern UI with React.js**  
+  Fully responsive and intuitive interface for seamless usage.
+
+---
+
+## 🛠️ Tech Stack
+
+| Area | Technologies |
+|------|--------------|
+| **Frontend** | React.js, Axios, HTML5, CSS3 |
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB, Mongoose |
+| **AI Integration** | Google Gemini API |
+| **Auth + Security** | JWT, bcrypt |
+| **Tools** | Git, GitHub |
+
+---
+
+## 📁 Project Structure
+
+```bash
+ResuAI/
+├── client/           # React frontend
+├── server/           # Node.js + Express backend
+│   ├── routes/       # Auth & analysis APIs
+│   ├── models/       # MongoDB schemas
+│   ├── controllers/  # Business logic
+│   └── middleware/   # Authentication middleware
+└── README.md
+
+
+
+
+
 
 Home page
 <img width="1920" height="2076" alt="screencapture-localhost-5173-2025-10-31-08_30_22" src="https://github.com/user-attachments/assets/1f3243b4-93b3-415a-83d2-8ed7f16f0c74" />
